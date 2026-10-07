@@ -130,3 +130,15 @@ Code is not only in `.text`:
   returns the value): WORM_SHOOT_INTERVAL 0x838424E4, WORM_RUN_SPEED 0x838945E4, WORM_JUMP_SPEED_Y 0x838945A8, ...
 - Found by diffing Jim's object and the globals 0x83830000-0x838E0000 every 30 frames while playing
   (a dev-only hook, removed after use).
+
+## rexruntime.dll rebuilt from source (v0.9.4)
+- The official ReXGlue v0.10.0 `rexruntime.dll` (SHA-256 e359209f...) is flagged by ~28/71 AV engines
+  (Defender `Wacatac.B!ml`), a heuristic false positive (rexglue/rexglue-sdk#485). Releases from v0.9.4 ship
+  one built from the v0.10.0 tag (f5337cdc) instead: SHA-256 e87c3555...
+- Build: clone `--branch v0.10.0 --recurse-submodules` to a short path (C:\rexsrc), replace the git symlink
+  stubs with copies (libmspack/cabextract/mspack/* etc.; Windows checkouts write them as text files), then
+  `cmake --preset win-amd64` and `cmake --build out/build/win-amd64 --config Release --target install`
+  with VS 2022 Build Tools' clang. Delete the HKCU\Software\Kitware\CMake\Packages\rexglue entry it registers.
+- All 558 rexruntime imports of the game exe are exported by the rebuild (only STL template helpers differ).
+- Ship it with the OFFICIAL rexgpu-xenos.dll: the rebuilt xenos plugin aborts at startup (0xc0000409).
+- The local SDK copy (tools/rexglue/win-amd64/bin/rexruntime.dll) holds the rebuilt DLL so builds copy it.
