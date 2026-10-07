@@ -80,7 +80,7 @@ play). Settings are saved to `earthworm_jim_hd.toml` next to the program. Turn t
 <td valign="middle">
 
 ### Display
-- **Windowed** or **fullscreen**, **window size**, **monitor**
+- **Windowed** or **fullscreen** (<kbd>F11</kbd> or <kbd>Alt</kbd>+<kbd>Enter</kbd> switch while playing), **window size**, **monitor**
 - **VSync** on or off
 - **Letterbox 16:9** or **stretch** on other screen shapes
 

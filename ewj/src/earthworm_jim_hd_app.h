@@ -48,6 +48,9 @@ void InstallFpeGuard();  // fpe_guard.cpp
 class EarthwormJimHdApp : public rex::ReXApp {
  public:
   using rex::ReXApp::ReXApp;
+  ~EarthwormJimHdApp() override {
+    if (window()) window()->RemoveInputListener(&fullscreen_keys_);
+  }
 
   static std::unique_ptr<rex::ui::WindowedApp> Create(rex::ui::WindowedAppContext& ctx) {
     return std::unique_ptr<EarthwormJimHdApp>(new EarthwormJimHdApp(ctx, "earthworm_jim_hd", PPCImageConfig));
@@ -83,6 +86,7 @@ class EarthwormJimHdApp : public rex::ReXApp {
   std::optional<rex::PathConfig> OnFinalizePaths(const rex::PathConfig& defaults,
                                                  std::function<void(rex::PathConfig)> resume) override {
     user_data_root_ = defaults.user_data_root;
+    ewj_config_path_ = defaults.config_path;
     const bool skip_once = REXCVAR_GET(ewj_skip_launcher);
     rex::cvar::ResetToDefault("ewj_skip_launcher");  // never persist it
     const bool files_ok =
@@ -133,6 +137,9 @@ class EarthwormJimHdApp : public rex::ReXApp {
     }
     ewj::ApplyRuntimeOverrides();
 
+    // F11 / Alt+Enter switch between fullscreen and windowed in game (issue #4).
+    if (window()) window()->AddInputListener(&fullscreen_keys_, 1);
+
     SeedTitleSpecificProfileSettings();
     ExportAchievementArt();
     // Give the launcher the achievement names (read from the game by the runtime).
@@ -165,6 +172,29 @@ class EarthwormJimHdApp : public rex::ReXApp {
   }
 
  private:
+  // F11 or Alt+Enter: toggle fullscreen. Setting the cvar makes ReXGlue switch
+  // the window; the choice is saved so the launcher and the next start keep it.
+  class FullscreenKeys final : public rex::ui::WindowInputListener {
+   public:
+    explicit FullscreenKeys(EarthwormJimHdApp& app) : app_(app) {}
+    void OnKeyDown(rex::ui::KeyEvent& e) override {
+      const auto key = e.virtual_key();
+      const bool hotkey = (key == rex::ui::VirtualKey::kF11 && !e.is_alt_pressed()) ||
+                          (key == rex::ui::VirtualKey::kReturn && e.is_alt_pressed());
+      if (!hotkey || e.prev_state()) return;  // ignore auto-repeat while held
+      e.set_handled(true);
+      const bool on = !REXCVAR_QUERY(bool, fullscreen);
+      rex::cvar::SetFlagByName("fullscreen", on ? "true" : "false");
+      if (!app_.ewj_config_path_.empty()) ewj::SaveSettings(app_.ewj_config_path_);
+      REXLOG_INFO("EWJ: {} (hotkey)", on ? "fullscreen" : "windowed");
+    }
+
+   private:
+    EarthwormJimHdApp& app_;
+  };
+  FullscreenKeys fullscreen_keys_{*this};
+  std::filesystem::path ewj_config_path_;  // the launcher's settings file
+
   // Size the game is shown at: the monitor in fullscreen, else the window.
   std::pair<int, int> OutputSize() const {
     if (REXCVAR_QUERY(bool, fullscreen) || !window()) return ewj::PrimaryScreenSize();

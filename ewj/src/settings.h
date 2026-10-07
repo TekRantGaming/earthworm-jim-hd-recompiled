@@ -86,7 +86,8 @@ void SetCvarDefault(std::string_view name, std::string_view value);
 void ApplyPortDefaults();
 
 // Settings the port sets itself at every start (never saved or reset): the
-// guest video mode, kept at 1280x720 whatever the window size.
+// guest video mode, kept at 1280x720 whatever the window size, and the
+// runtime settings ApplyRuntimeOverrides forces.
 bool IsPinnedCvar(std::string_view name);
 
 // Forces the ReXGlue settings the port depends on (see settings.cpp).

@@ -216,7 +216,12 @@ void SetCvarDefault(std::string_view name, std::string_view value) {
   }
 }
 
-bool IsPinnedCvar(std::string_view name) { return name == "video_mode_width" || name == "video_mode_height"; }
+bool IsPinnedCvar(std::string_view name) {
+  // The guest video mode (PinGuestVideoMode), and what ApplyRuntimeOverrides
+  // forces, which a save made while playing (F11) would otherwise write out.
+  return name == "video_mode_width" || name == "video_mode_height" || name == "vsync" ||
+         name == "d3d12_submit_on_primary_buffer_end";
+}
 
 void PinGuestVideoMode() {
   // ReXGlue derives the console's video mode from window_width/height whenever

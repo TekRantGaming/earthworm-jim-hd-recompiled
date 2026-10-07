@@ -338,8 +338,10 @@ class LauncherDialog final : public rex::ui::ImGuiDialog {
 
   // ------------------------------------------------------------ Display ---
   void PageDisplay(trg::Ui& ui) {
-    ui.Toggle("Window mode", "Fullscreen uses a borderless window at your desktop resolution.", "fullscreen", false,
-              "Windowed", "Fullscreen");
+    ui.Toggle("Window mode",
+              "Fullscreen uses a borderless window at your desktop resolution. F11 or Alt+Enter switches while "
+              "playing.",
+              "fullscreen", false, "Windowed", "Fullscreen");
     ui.Row("Window size", "Size of the window in windowed mode. Applies when the game starts.");
     WindowSizeCombo();
     ui.Row("Monitor", "Which display the game opens on. Applies when the game starts.");
