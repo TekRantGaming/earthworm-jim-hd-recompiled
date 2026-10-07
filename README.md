@@ -6,7 +6,7 @@
 
 [![Latest release](https://img.shields.io/github/v/release/TekRantGaming/earthworm-jim-hd-recompiled?style=for-the-badge&label=release&color=99db2e&labelColor=07101f&include_prereleases)](https://github.com/TekRantGaming/earthworm-jim-hd-recompiled/releases/latest)
 [![Downloads](https://img.shields.io/github/downloads/TekRantGaming/earthworm-jim-hd-recompiled/total?style=for-the-badge&color=2e7d32&labelColor=07101f)](https://github.com/TekRantGaming/earthworm-jim-hd-recompiled/releases)
-![Platforms](https://img.shields.io/badge/platform-Windows%2010%20%7C%2011-00acc1?style=for-the-badge&labelColor=07101f)
+![Platforms](https://img.shields.io/badge/platforms-Windows%20%7C%20Linux%20%7C%20Steam%20Deck-00acc1?style=for-the-badge&labelColor=07101f)
 
 <sub>The original Xbox 360 game code, translated to native PC code with the <a href="https://github.com/rexglue/rexglue-sdk">ReXGlue SDK</a>. <b>No game files included</b>: bring your own Earthworm Jim HD Xbox Live Arcade package.</sub>
 
@@ -16,7 +16,7 @@
 
 ## What you need
 
-- Windows 10 or 11, 64-bit, and a DirectX 12 graphics card
+- Windows 10 or 11, 64-bit, and a DirectX 12 graphics card, **or** 64-bit Linux / a Steam Deck with Vulkan
 - **Your own Earthworm Jim HD Xbox Live Arcade package**, this exact release:
 
 | | |
@@ -41,6 +41,19 @@ so `default.xex` is what identifies the version.
 3. On the **Play** page click **Install from package...** and pick your package file (or drop it onto the window).
    Its files (about 430 MB) are copied into the `game` folder next to the program.
 4. Press **PLAY**.
+
+### Linux and Steam Deck
+
+Download **EarthwormJimHD-v…-linux-x86_64.AppImage** from the release instead. On a Steam Deck:
+
+1. In **Desktop Mode**, right-click the AppImage > **Properties** > **Permissions** > tick **Is executable**.
+2. Copy your package to the Deck (USB stick, SD card or network) and double-click the AppImage.
+3. On the **Play** page click **Install from package...**. The game files go in a `game` folder next to the AppImage.
+4. In Steam: **Games > Add a Non-Steam Game**, pick the AppImage, and play it from **Game Mode**.
+
+Use the touchscreen or the trackpad for the launcher's settings; **Start** presses Play.
+
+### Updates
 
 New versions are found automatically: when the launcher opens it checks this repository's releases and offers to
 update (About page: **Updates: Ask / Automatic / Off**). Your game files, saves and settings are kept.
