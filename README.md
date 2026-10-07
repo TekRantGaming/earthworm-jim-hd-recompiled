@@ -165,7 +165,7 @@ about what you were doing.
 ## Building it yourself
 
 Instead of the prebuilt downloads you can build the port on your own PC from your package: clone this repository
-with `--recursive` (or download the source code zip from the release) and double-click
+with `--recursive` (so the TRG launcher submodule comes too) and double-click
 **Build Earthworm Jim HD.bat**. It installs the build tools if needed (Visual Studio 2022 Build Tools with Clang,
 CMake, Ninja), downloads the ReXGlue SDK, translates the game code from your package and compiles it (15 to 30
 minutes, about 5 GB free).
