@@ -14,9 +14,6 @@
 
 </div>
 
-> **Status: preview (v0.9.0).** Plays from the title screen into the levels, with saving, at up to 4K and above 60 FPS.
-> It has not been played through to the end yet: please report anything that goes wrong (see [Reporting problems](#reporting-problems)).
-
 ## What you need
 
 - Windows 10 or 11, 64-bit, and a DirectX 12 graphics card
@@ -172,4 +169,8 @@ ewj\build.bat
 - [ReXGlue SDK](https://github.com/rexglue/rexglue-sdk) for the recompiler and runtime (BSD 3-Clause).
 - [TRG Launcher](https://github.com/TekRantGaming/trg-launcher), from the Outpost Kaloki X and King Kong ports.
 
-This port was made with AI (Claude Code).
+## AI disclosure
+
+This port was developed with the help of AI tools. AI was used for analysing the game's code, writing much of the
+port's source code (including the launcher pages, game fixes and build tools) and drafting the documentation. All of
+it was directed, tested and reviewed by the maintainer, and every change is tracked in this repository.

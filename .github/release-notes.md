@@ -1,4 +1,4 @@
-## Earthworm Jim HD PC Port v0.9.0 (preview)
+## Earthworm Jim HD PC Port v0.9.0
 
 Play the Xbox 360 edition of Earthworm Jim HD natively on Windows, with the TRG launcher and modern PC options.
 
@@ -32,9 +32,7 @@ The launcher checks both and explains if your package is a different version.
 ### Other download
 **EarthwormJimHD-Builder** builds the same thing on your own PC from source and your package (about 15 to 30 minutes).
 
-### This is a preview
-Tested from the title screen into the first level, with saving and reloading. Please report crashes with the `crash-*.txt` and `.dmp` files from the `logs` folder next to the game.
+### Reporting problems
+If the game crashes, please open an issue and attach the `crash-*.txt` and `.dmp` files from the `logs` folder next to the game.
 
 Requires Windows 10 or 11 (64-bit) and a DirectX 12 graphics card.
-
-This port was made with AI (Claude Code). See the README for details.

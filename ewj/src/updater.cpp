@@ -32,13 +32,12 @@ namespace {
 
 namespace fs = std::filesystem;
 
-// The release list, not /releases/latest: that one skips prereleases, and
-// the preview releases are prereleases.
+// The release list, not /releases/latest: that one skips prereleases.
 constexpr const char* kReleasesApi =
     "https://api.github.com/repos/TekRantGaming/earthworm-jim-hd-recompiled/releases?per_page=20";
 constexpr const char* kZipSuffix = "-windows-x64.zip";
 
-// "v1.2.3" / "1.2.3-preview" -> {1, 2, 3}
+// "v1.2.3" / "1.2.3-beta" -> {1, 2, 3}
 std::vector<int> ParseVersion(const std::string& text) {
   std::vector<int> parts;
   std::smatch m;
