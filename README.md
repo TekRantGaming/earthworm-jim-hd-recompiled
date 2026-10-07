@@ -142,6 +142,13 @@ play). Settings are saved to `earthworm_jim_hd.toml` next to the program. Turn t
 </tr>
 </table>
 
+### Cheats
+All off by default, set before you press Play. They work in Jim's platform levels.
+- **Infinite health**: hits no longer drain Jim's health (pits still count)
+- **Infinite lives**: no Game Over
+- **Infinite ammo** and **rapid fire** for the plasma gun
+- **High jump** and **fast run**
+
 ## Screenshots
 
 | | |
