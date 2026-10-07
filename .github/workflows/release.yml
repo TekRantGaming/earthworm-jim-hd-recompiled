@@ -1,0 +1,47 @@
+# Attaches the Windows builder (source + build scripts) to each published
+# release. The builder contains only this repository's files plus the TRG
+# launcher submodule; players build on their own PC from their own XBLA
+# package. The prebuilt windows-x64 zip is uploaded with the release itself.
+name: release
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Release tag to attach the builder to"
+        required: true
+
+permissions:
+  contents: write
+
+jobs:
+  windows-builder:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          ref: ${{ github.event.release.tag_name || inputs.tag }}
+
+      - name: Release tag
+        run: echo "TAG=${{ github.event.release.tag_name || inputs.tag }}" >> "$GITHUB_ENV"
+
+      - name: Package the builder
+        run: |
+          name="EarthwormJimHD-Builder-${TAG}-windows"
+          # git archive leaves submodules out; zip the tracked files of both.
+          mkdir -p "stage/${name}"
+          git ls-files --recurse-submodules | while IFS= read -r f; do
+            mkdir -p "stage/${name}/$(dirname "$f")"; cp -p "$f" "stage/${name}/$f"
+          done
+          (cd stage && zip -qr "../${name}.zip" "${name}")
+          echo "ZIP=${name}.zip" >> "$GITHUB_ENV"
+          unzip -l "${name}.zip" | tail -1
+          unzip -l "${name}.zip" | grep -q "third_party/trg-launcher/CMakeLists.txt" || { echo "TRG launcher missing from the zip"; exit 1; }
+
+      - name: Attach to the release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release upload "$TAG" "$ZIP" --clobber

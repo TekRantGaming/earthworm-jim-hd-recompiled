@@ -1,0 +1,33 @@
+# Manual analysis fixes for Earthworm Jim HD (default.xex, title 584109E2)
+
+# CRT setjmp/longjmp, so the recompiler emits real non-local jumps for them.
+# libjpeg's error handler leaves through longjmp: without these, a failed JPEG
+# decode restored the guest registers (r1, r31...) while the host stack stayed
+# put, and the caller crashed on a null r31 (read of guest 0x1A4).
+setjmp_address = 0x83259AE0
+longjmp_address = 0x832596B0
+
+[functions]
+# The image holds a second copy of the compiler's register save/restore helpers
+# (0x83250E20.., 0x83254CA0..); ReXGlue only registers the first copy (0x829A8xxx).
+# Code tail-calls every __restgprlr_N of the second copy (b __restgprlr_28 at
+# 0x836FEFCC). Config functions may not overlap, so each entry is a 4-byte
+# function that falls through to the next; the last runs to the blr.
+0x83250E70 = { size = 4, name = "__restgprlr_14_b" }
+0x83250E74 = { size = 4, name = "__restgprlr_15_b" }
+0x83250E78 = { size = 4, name = "__restgprlr_16_b" }
+0x83250E7C = { size = 4, name = "__restgprlr_17_b" }
+0x83250E80 = { size = 4, name = "__restgprlr_18_b" }
+0x83250E84 = { size = 4, name = "__restgprlr_19_b" }
+0x83250E88 = { size = 4, name = "__restgprlr_20_b" }
+0x83250E8C = { size = 4, name = "__restgprlr_21_b" }
+0x83250E90 = { size = 4, name = "__restgprlr_22_b" }
+0x83250E94 = { size = 4, name = "__restgprlr_23_b" }
+0x83250E98 = { size = 4, name = "__restgprlr_24_b" }
+0x83250E9C = { size = 4, name = "__restgprlr_25_b" }
+0x83250EA0 = { size = 4, name = "__restgprlr_26_b" }
+0x83250EA4 = { size = 4, name = "__restgprlr_27_b" }
+0x83250EA8 = { size = 4, name = "__restgprlr_28_b" }
+0x83250EAC = { size = 4, name = "__restgprlr_29_b" }
+0x83250EB0 = { size = 4, name = "__restgprlr_30_b" }
+0x83250EB4 = { end = 0x83250EC4, name = "__restgprlr_31_b" }

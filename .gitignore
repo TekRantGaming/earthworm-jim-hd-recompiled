@@ -1,0 +1,27 @@
+# --- Copyrighted game data: never commit ---
+/package/
+/game/
+/ewj/assets
+/ewj/image.bin
+*.xex
+*.dat
+*.xwb
+*.xsb
+# Recompiled C++ is derived from the game's code; regenerate with setup.ps1
+/ewj/generated/default/
+
+# --- Downloaded / build output ---
+/tools/rexglue/
+/ewj/out/
+/screenshots/
+/dist/
+
+# --- Logs & scratch ---
+*.log
+/ewj/unres.txt
+
+# Player-supplied sounds (not ours to share)
+*.wav
+
+# Analysis tool build output
+/tools/dump_image/build/

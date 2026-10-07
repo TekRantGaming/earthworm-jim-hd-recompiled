@@ -1,0 +1,31 @@
+{
+    "version": 6,
+    "configurePresets": [
+        {
+            "name": "user-env",
+            "hidden": true,
+            "cacheVariables": {
+                "CMAKE_PREFIX_PATH": "${sourceDir}/../tools/rexglue/win-amd64"
+            }
+        },
+        {
+            "name": "user-env-linux",
+            "hidden": true,
+            "cacheVariables": {
+                "CMAKE_PREFIX_PATH": "${sourceDir}/../tools/rexglue/linux-amd64"
+            }
+        },
+        { "name": "ewj-debug",          "inherits": ["win-amd64-debug",          "user-env"] },
+        { "name": "ewj-release",        "inherits": ["win-amd64-release",        "user-env"] },
+        { "name": "ewj-relwithdebinfo", "inherits": ["win-amd64-relwithdebinfo", "user-env"] },
+        { "name": "ewj-linux-release",  "inherits": ["linux-amd64-release",      "user-env-linux"] },
+        { "name": "ewj-dev",            "inherits": ["ewj-relwithdebinfo"], "cacheVariables": { "EWJ_DEV_TOOLS": "ON" } }
+    ],
+    "buildPresets": [
+        { "name": "ewj-debug",          "configurePreset": "ewj-debug" },
+        { "name": "ewj-release",        "configurePreset": "ewj-release" },
+        { "name": "ewj-relwithdebinfo", "configurePreset": "ewj-relwithdebinfo" },
+        { "name": "ewj-linux-release",  "configurePreset": "ewj-linux-release" },
+        { "name": "ewj-dev",            "configurePreset": "ewj-dev" }
+    ]
+}
