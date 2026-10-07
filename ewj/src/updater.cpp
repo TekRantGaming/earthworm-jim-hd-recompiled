@@ -32,8 +32,10 @@ namespace {
 
 namespace fs = std::filesystem;
 
-constexpr const char* kLatestApi =
-    "https://api.github.com/repos/TekRantGaming/earthworm-jim-hd-recompiled/releases/latest";
+// The release list, not /releases/latest: that one skips prereleases, and
+// the preview releases are prereleases.
+constexpr const char* kReleasesApi =
+    "https://api.github.com/repos/TekRantGaming/earthworm-jim-hd-recompiled/releases?per_page=20";
 constexpr const char* kZipSuffix = "-windows-x64.zip";
 
 // "v1.2.3" / "1.2.3-preview" -> {1, 2, 3}
@@ -105,32 +107,50 @@ const char* CurrentVersion() {
 
 std::optional<Release> CheckLatest(std::string* error) {
   std::string json;
-  if (std::string err = trg::HttpGet(kLatestApi, json); !err.empty()) {
+  if (std::string err = trg::HttpGet(kReleasesApi, json); !err.empty()) {
     if (error) *error = err;
     return std::nullopt;
   }
-  Release r;
-  r.tag = JsonString(json, "tag_name");
-  r.page = JsonString(json, "html_url");
-  if (r.tag.empty()) {
-    if (error) *error = "GitHub did not return a release.";
+  // Each release object holds "html_url", "tag_name", "draft" and its
+  // "assets" (with "browser_download_url"s) before the next release's
+  // "html_url"... Walk them by tag and keep the newest published one that has
+  // a Windows zip.
+  std::optional<Release> best;
+  size_t pos = 0;
+  while (true) {
+    size_t tag_at = 0;
+    const std::string tag = JsonString(json, "tag_name", pos, &tag_at);
+    if (tag.empty()) break;
+    size_t next_at = 0;
+    const bool has_next = !JsonString(json, "tag_name", tag_at + 1, &next_at).empty();
+    const size_t end = has_next ? next_at : json.size();
+    const std::string object = json.substr(tag_at, end - tag_at);
+    pos = tag_at + 1;
+    if (object.find("\"draft\": true") != std::string::npos || object.find("\"draft\":true") != std::string::npos)
+      continue;
+    Release r;
+    r.tag = tag;
+    r.page = "https://github.com/TekRantGaming/earthworm-jim-hd-recompiled/releases/tag/" + tag;
+    for (size_t a = 0;;) {
+      size_t url_at = 0;
+      const std::string url = JsonString(object, "browser_download_url", a, &url_at);
+      if (url.empty()) break;
+      if (url.ends_with(kZipSuffix)) {
+        r.zip = url;
+        break;
+      }
+      a = url_at + 1;
+    }
+    if (r.zip.empty()) continue;
+    if (!best || ParseVersion(r.tag) > ParseVersion(best->tag)) best = r;
+  }
+  if (!best) {
+    if (error && json.find("tag_name") == std::string::npos) *error = "GitHub did not return any releases.";
     return std::nullopt;
   }
-  // The asset whose download URL ends in -windows-x64.zip.
-  for (size_t pos = 0;;) {
-    size_t at = 0;
-    const std::string url = JsonString(json, "browser_download_url", pos, &at);
-    if (url.empty()) break;
-    if (url.size() > std::strlen(kZipSuffix) && url.ends_with(kZipSuffix)) {
-      r.zip = url;
-      break;
-    }
-    pos = at + 1;
-  }
-  if (r.zip.empty()) return std::nullopt;
-  if (ParseVersion(r.tag) <= ParseVersion(CurrentVersion())) return std::nullopt;
-  REXLOG_INFO("EWJ: update {} available (this is {})", r.tag, CurrentVersion());
-  return r;
+  if (ParseVersion(best->tag) <= ParseVersion(CurrentVersion())) return std::nullopt;
+  REXLOG_INFO("EWJ: update {} available (this is {})", best->tag, CurrentVersion());
+  return best;
 }
 
 std::string Install(trg::Task& task, const Release& release) {
