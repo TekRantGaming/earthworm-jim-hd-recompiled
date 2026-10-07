@@ -5,6 +5,7 @@
 ### Earthworm Jim HD on PC, running natively, with the TRG launcher and the options of a modern PC release.
 
 [![Latest release](https://img.shields.io/github/v/release/TekRantGaming/earthworm-jim-hd-recompiled?style=for-the-badge&label=release&color=99db2e&labelColor=07101f&include_prereleases)](https://github.com/TekRantGaming/earthworm-jim-hd-recompiled/releases/latest)
+[![Downloads](https://img.shields.io/github/downloads/TekRantGaming/earthworm-jim-hd-recompiled/total?style=for-the-badge&color=2e7d32&labelColor=07101f)](https://github.com/TekRantGaming/earthworm-jim-hd-recompiled/releases)
 ![Platforms](https://img.shields.io/badge/platform-Windows%2010%20%7C%2011-00acc1?style=for-the-badge&labelColor=07101f)
 
 <sub>The original Xbox 360 game code, translated to native PC code with the <a href="https://github.com/rexglue/rexglue-sdk">ReXGlue SDK</a>. <b>No game files included</b>: bring your own Earthworm Jim HD Xbox Live Arcade package.</sub>
