@@ -232,7 +232,7 @@ void PinGuestVideoMode() {
   // 1280x720. The check is "value != registered default", so the registered
   // default is cleared rather than the value changed.
   for (auto& e : rex::cvar::GetRegistry()) {
-    if (!IsPinnedCvar(e.name)) continue;
+    if (e.name != "video_mode_width" && e.name != "video_mode_height") continue;
     if (e.source == rex::cvar::Source::kDefault) e.setter(e.name == "video_mode_width" ? "1280" : "720");
     e.default_value.clear();
   }
