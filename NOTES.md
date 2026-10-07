@@ -120,3 +120,13 @@ Code is not only in `.text`:
   no errors. Not yet played with input: menus, levels, saving, achievements, audio quality all untested.
 - Known harmless log noise: `update:\` (no title update mounted) and `#DefaultFont` probes fail; the game falls back
   to `game:\`.
+
+## Cheats (issue #1)
+- Jim = actor with main vtable 0x82425D00 (ctor sub_82A4CD78; second base at +0x118 with vtable 0x82425CE8).
+- Actor::SetHP = sub_82854E00 (vtable +0x80): health +0x254, max +0x284. Hits drain a few points per frame
+  (caller 82A4F9C8), regeneration from 82A4F920, death 82A6C2A4, respawn 828525C0.
+- Jim's lives +0x340 (taken at respawn), plasma ammo +0x348 (1000 full). Jim's update: sub_82A4F648 (r3 = obj+0x118).
+- wormcfg01 parameters are ints loaded into globals by sub_82A58140 at level load (sub_8275F510(name, group)
+  returns the value): WORM_SHOOT_INTERVAL 0x838424E4, WORM_RUN_SPEED 0x838945E4, WORM_JUMP_SPEED_Y 0x838945A8, ...
+- Found by diffing Jim's object and the globals 0x83830000-0x838E0000 every 30 frames while playing
+  (a dev-only hook, removed after use).

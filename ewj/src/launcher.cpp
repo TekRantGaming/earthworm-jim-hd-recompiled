@@ -165,6 +165,8 @@ class LauncherDialog final : public rex::ui::ImGuiDialog {
         {"Gameplay", "Frame rate, language and the frame counter.", [](trg::Ui& ui) { PageGameplay(ui); }},
         {"Controls", "Sticks, vibration, button remapping and keyboard play.",
          [this](trg::Ui& ui) { PageControls(ui); }},
+        {"Cheats", "Infinite health, lives and ammo, and a few extras. All off by default.",
+         [](trg::Ui& ui) { PageCheats(ui); }},
         {"Achievements", "Your progress on the game's achievements.", [this](trg::Ui& ui) { PageAchievements(ui); }},
         {"About", "About this port, and where your saves and settings live.", [this](trg::Ui& ui) { PageAbout(ui); }},
     };
@@ -477,6 +479,19 @@ class LauncherDialog final : public rex::ui::ImGuiDialog {
               {"4", "Fran\xC3\xA7" "ais"},
               {"6", "Italiano"},
               {"2", "\xE6\x97\xA5\xE6\x9C\xAC\xE8\xAA\x9E"}});
+  }
+
+  // ------------------------------------------------------------- Cheats ---
+  static void PageCheats(trg::Ui& ui) {
+    ui.Toggle("Infinite health", "Hits no longer drain Jim's health. Pits and other instant deaths still count.",
+              "ewj_cheat_health", false);
+    ui.Toggle("Infinite lives", "Jim keeps his lives when he dies, so it is never Game Over.", "ewj_cheat_lives",
+              false);
+    ui.Toggle("Infinite ammo", "The plasma gun never runs low.", "ewj_cheat_ammo", false);
+    ui.Toggle("Rapid fire", "The plasma gun fires three times as fast.", "ewj_cheat_rapid_fire", false);
+    ui.Toggle("High jump", "Jim jumps higher.", "ewj_cheat_high_jump", false);
+    ui.Toggle("Fast run", "Jim runs half as fast again.", "ewj_cheat_fast_run", false);
+    ui.Help("Cheats work in Jim's platform levels. Achievements can still be unlocked with cheats on.");
   }
 
   // ----------------------------------------------------------- Controls ---

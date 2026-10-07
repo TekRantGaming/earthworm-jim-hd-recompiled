@@ -41,6 +41,7 @@ set(EARTHWORMJIMHD_SOURCES
     src/abi_helpers.cpp
     src/profile_fix.cpp
     src/live_fix.cpp
+    src/cheats.cpp
     src/updater.cpp
     src/fpe_guard.cpp
     src/frame_stats.cpp
