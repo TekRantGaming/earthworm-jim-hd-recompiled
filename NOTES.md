@@ -24,7 +24,7 @@ ewj\run.bat                                      # launcher first; hold Shift to
 | `tools/dump_image/` | `ewj_dump_image`: writes the decrypted guest image (`ewj/image.bin`) for analysis |
 | `tools/ppcdis.py` | Disassembles the dumped image (capstone) |
 | `tools/find_thunks.py`, `find_veneers.py`, `find_switch_tables.py`, `find_missing_funcs.py`, `seed_unresolved.py`, `find_callers.py`, `find_refs.py`, `find_setjmp.py` | Analysis helpers (below) |
-| `tools/patch_setjmp.ps1` | Post-codegen fix for setjmp/longjmp via veneers (run after every codegen) |
+| `tools/patch_setjmp.cmake` | Post-codegen fix for setjmp/longjmp via veneers (run after every codegen) |
 | `tools/dev_build.bat ON/OFF` | Quick rebuild with `src/dev_trace.cpp` tracing hooks (`EWJ_DEV_TOOLS`) |
 | `ewj/` | ReXGlue project (`assets/` = junction to `game/`, `generated/` = recompiled C++) |
 | `ewj/overrides.toml` | Hand-made analysis fixes |
@@ -58,7 +58,7 @@ Code is not only in `.text`:
   only ever called through veneers (setjmp: `0x827CFFC0`/`0x837E4D40`, longjmp: `0x82728C90`/`0x8373DA10`), so
   ReXGlue never emits ppc_setjmp/ppc_longjmp for them. libjpeg's error handler longjmps: without the fix guest
   registers were restored but the host stack was not (crash: read of guest 0x1A4 in `sub_83391F80`).
-  `tools/patch_setjmp.ps1` rewrites the 50 call sites after every codegen (setup.ps1 runs it).
+  `tools/patch_setjmp.cmake` rewrites the 50 call sites after every codegen (setup.ps1 runs it).
 - **Jump tables**: ReXGlue sometimes recovers fewer cases than a table has; an index past them hits
   `__builtin_trap` (crash 0xC000001D in `sub_82AAFB28`: table bounded at 32, only case 0 recovered).
   `tools/find_switch_tables.py` reads all 217 tables from the image (absolute `lwzx` tables, inline tables,

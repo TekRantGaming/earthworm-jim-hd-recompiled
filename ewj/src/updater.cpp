@@ -35,7 +35,12 @@ namespace fs = std::filesystem;
 // The release list, not /releases/latest: that one skips prereleases.
 constexpr const char* kReleasesApi =
     "https://api.github.com/repos/TekRantGaming/earthworm-jim-hd-recompiled/releases?per_page=20";
+// The download this platform installs from a release.
+#if defined(_WIN32)
 constexpr const char* kZipSuffix = "-windows-x64.zip";
+#else
+constexpr const char* kZipSuffix = "-linux-x86_64.AppImage";
+#endif
 
 // "v1.2.3" / "1.2.3-beta" -> {1, 2, 3}
 std::vector<int> ParseVersion(const std::string& text) {
@@ -206,14 +211,33 @@ std::string Install(trg::Task& task, const Release& release) {
   REXLOG_INFO("EWJ: installed update {}", release.tag);
   return "";
 #else
-  (void)task;
-  (void)release;
-  return "Updates are installed automatically on Windows only.";
+  // Linux / Steam Deck: the release's AppImage replaces the running one. A
+  // running AppImage stays mounted, so its file can be swapped (rename over it).
+  const char* appimage = std::getenv("APPIMAGE");
+  if (!appimage || !*appimage)
+    return "Updates install automatically from the AppImage. Download the new version from " + release.page;
+  const fs::path target = appimage;
+  const fs::path fresh = target.string() + ".new";
+  std::error_code ec;
+  fs::remove(fresh, ec);
+  task.SetLabel("Downloading " + release.tag);
+  if (std::string err = trg::DownloadFile(task, release.zip, fresh.string()); !err.empty()) return err;
+  if (task.cancelled()) return "Cancelled.";
+  task.SetLabel("Installing");
+  fs::permissions(fresh, fs::perms::owner_all | fs::perms::group_read | fs::perms::group_exec |
+                             fs::perms::others_read | fs::perms::others_exec,
+                  fs::perm_options::replace, ec);
+  fs::rename(fresh, target, ec);
+  if (ec) return "Could not replace " + target.filename().string() + ": " + ec.message();
+  REXLOG_INFO("EWJ: installed update {}", release.tag);
+  return "";
 #endif
 }
 
 void CleanUpPreviousUpdate() {
   std::error_code ec;
+  if (const char* appimage = std::getenv("APPIMAGE"); appimage && *appimage)
+    fs::remove(fs::path(appimage).string() + ".new", ec);  // an interrupted AppImage update
   for (auto& e : fs::directory_iterator(ExeDir(), ec))
     if (e.path().extension() == ".old") fs::remove(e.path(), ec);
 }

@@ -1,4 +1,4 @@
-<#
+﻿<#
 .SYNOPSIS
   One-time setup: downloads the ReXGlue SDK, extracts your Earthworm Jim HD
   Xbox Live Arcade package and generates the recompiled C++ sources.
@@ -44,7 +44,8 @@ try {
     & $rexglue codegen earthworm_jim_hd_manifest.toml 2>&1 | ForEach-Object { "$_" }
     if ($LASTEXITCODE -ne 0) { throw "codegen failed ($LASTEXITCODE)" }
     # setjmp/longjmp are only called through veneers: rewrite those calls (NOTES.md).
-    & (Join-Path $root 'tools\patch_setjmp.ps1')
+    & cmake "-DGENERATED=$(Join-Path $root 'ewj\generated\default')" -P (Join-Path $root 'tools\patch_setjmp.cmake')
+    if ($LASTEXITCODE -ne 0) { throw "patch_setjmp failed ($LASTEXITCODE)" }
 } finally { Pop-Location; $ErrorActionPreference = 'Stop' }
 
 Write-Host "`nDone. Build with: ewj\build.bat   Run with: ewj\run.bat"

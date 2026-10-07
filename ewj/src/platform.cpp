@@ -125,7 +125,7 @@ void RelaunchSelf(std::wstring_view extra_args) {
   for (std::string arg; std::getline(cmdline, arg, '\0');) args.push_back(arg);
   std::string extra;
   for (wchar_t c : extra_args) extra += static_cast<char>(c);  // ASCII flags
-  args.push_back(extra);
+  if (!extra.empty()) args.push_back(extra);
   // Inside an AppImage, relaunch the AppImage itself rather than the mounted binary.
   const char* appimage = std::getenv("APPIMAGE");
   const std::string exe = appimage ? appimage : std::filesystem::read_symlink("/proc/self/exe").string();

@@ -3,7 +3,7 @@
 # SDK boilerplate lives in generated/rexglue.cmake.
 
 cmake_minimum_required(VERSION 3.25)
-project(earthworm_jim_hd VERSION 0.9.1 LANGUAGES C CXX)
+project(earthworm_jim_hd VERSION 0.9.2 LANGUAGES C CXX)
 
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -11,17 +11,14 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 include(generated/rexglue.cmake)
 
 # setjmp/longjmp are only called through veneers, so every codegen run must be
-# followed by tools/patch_setjmp.ps1 (NOTES.md). setup.ps1 runs it; this makes
-# the codegen step inside the build run it too, so a regenerate during a build
-# can never drop the fix. The patch is idempotent.
-if(WIN32)
-    add_custom_command(
-        OUTPUT "${CMAKE_CURRENT_SOURCE_DIR}/generated/default/codegen.build.stamp"
-        APPEND
-        COMMAND powershell -NoProfile -ExecutionPolicy Bypass
-                -File "${CMAKE_CURRENT_SOURCE_DIR}/../tools/patch_setjmp.ps1"
-                -Generated "${CMAKE_CURRENT_SOURCE_DIR}/generated/default")
-endif()
+# followed by tools/patch_setjmp.cmake (NOTES.md). setup.ps1 runs it; this makes
+# the codegen step inside the build run it too, on every platform, so a
+# regenerate during a build can never drop the fix. The patch is idempotent.
+add_custom_command(
+    OUTPUT "${CMAKE_CURRENT_SOURCE_DIR}/generated/default/codegen.build.stamp"
+    APPEND
+    COMMAND ${CMAKE_COMMAND} "-DGENERATED=${CMAKE_CURRENT_SOURCE_DIR}/generated/default"
+            -P "${CMAKE_CURRENT_SOURCE_DIR}/../tools/patch_setjmp.cmake")
 
 # TRG Launcher (third_party/trg-launcher, a submodule). It draws inside the
 # runtime's own Dear ImGui frame, so it must use the ImGui compiled into
@@ -33,6 +30,10 @@ set(TRG_LAUNCHER_STANDALONE OFF CACHE BOOL "" FORCE)
 set(TRG_LAUNCHER_BUILD_DEMO OFF CACHE BOOL "" FORCE)
 set(TRG_LAUNCHER_FETCH_DEPS OFF CACHE BOOL "" FORCE)
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/../third_party/trg-launcher trg-launcher)
+# The launcher library is written for C++17 (in C++20 and later, u8string() is
+# a different type, which breaks its Linux code paths); this project's C++23
+# default would otherwise apply to it too.
+set_target_properties(trg_launcher PROPERTIES CXX_STANDARD 17)
 
 # Sources
 set(EARTHWORMJIMHD_SOURCES
