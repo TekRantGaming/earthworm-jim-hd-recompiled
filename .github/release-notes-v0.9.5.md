@@ -18,5 +18,5 @@ Open the launcher: it offers the update and installs it for you (or **About > Ch
 **No game files are included.**
 
 ### SHA-256
-- `EarthwormJimHD-v0.9.5-windows-x64.zip`: `aacfb3d9647bb982d0c1cb41537cac15154660c7063a127da5b12e9a4db685fa`
-- `EarthwormJimHD-v0.9.5-linux-x86_64.AppImage`: `5583ade73584938020ab65550eab36bdec6b9b06b926087d75265d88d52aca2d`
+- `EarthwormJimHD-v0.9.5-windows-x64.zip`: `95772702d57a2a0f16744029c817396020b4d33c5116ec1b335b38d76e0faecf`
+- `EarthwormJimHD-v0.9.5-linux-x86_64.AppImage`: `c3396679bc18355a023b0cd9c1900e35604fb2963728f3792d3a244bc1165b0b`
