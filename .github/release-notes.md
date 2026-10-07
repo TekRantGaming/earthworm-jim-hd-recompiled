@@ -20,7 +20,7 @@ The launcher checks both and explains if your package is a different version.
 ### What's in it
 - The TRG launcher, with art from your copy of the game
 - Up to 8K render resolution with quality presets, FXAA, 2x MSAA and 16x texture filtering
-- Frame-rate caps from 30 to unlimited at the game's normal speed (currently tops out around 110 FPS)
+- Frame-rate caps from 30 to unlimited at the game's normal speed
 - Letterbox or stretch, windowed or fullscreen, monitor choice
 - All six languages
 - Saves work (fixed: the game could not read its profile data under the runtime)

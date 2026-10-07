@@ -82,9 +82,6 @@ Code is not only in `.text`:
 - Game logic runs on that delta, so above 60 the port writes a smaller minimum (`1000 / ewj_frame_rate`, 1 for
   unlimited) every frame (`ApplyGameFrameCap`) and `LimitFrameRate()` does the exact pacing. Measured with the
   dev-build trace (sum of the game's deltas vs wall clock): game time x1.000 at 60, 120, 240 and unlimited.
-- Ceiling ~110 FPS on the test PC (RTX 4070 Ti, 120 Hz) independent of resolution and VSync: the game thread spins in
-  the D3D fence waits (`sub_82C001D8`, `sub_82C10150`) for the emulated GPU each frame. Same ~110 as Outpost Kaloki X:
-  a ReXGlue CPU/GPU sync characteristic, not this game. Lifting it is runtime work.
 - Main-loop call chain (dev trace): swap `sub_82C211F8` <- `82DA0118` <- `82BEEE18` (main) <- `82BF1EB0` (CRT start).
 
 ## Display

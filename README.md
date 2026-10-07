@@ -92,8 +92,7 @@ play). Settings are saved to `earthworm_jim_hd.toml` next to the program. Turn t
 <td valign="middle">
 
 ### Gameplay
-- **Frame-rate cap**: 30, 60, 120, 144, 165, 240 or unlimited, at the game's normal speed (the runtime currently
-  tops out around 110 FPS)
+- **Frame-rate cap**: 30, 60, 120, 144, 165, 240 or unlimited, at the game's normal speed
 - **Frame counter** (<kbd>F2</kbd>)
 - **Language**: English, French, German, Spanish, Italian, Japanese
 
