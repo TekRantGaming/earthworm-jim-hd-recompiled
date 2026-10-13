@@ -1,0 +1,14 @@
+{
+  "$schema": "https://recomp.fyi/schema/v1.json",
+  "game": "Earthworm Jim HD",
+  "system": "Xbox 360",
+  "type": "recomp",
+  "original": { "revision": "Xbox Live Arcade", "serial": "584109E2", "sha1": "62D9D28A3BCE42843607C26AB4B200E91CB31203" },
+  "project": "Earthworm Jim HD Recompiled",
+  "status": "released",
+  "targets": ["Windows", "Linux", "Steam Deck"],
+  "toolchain": "ReXGlue",
+  "approach": "Static recompilation with ReXGlue",
+  "maintainers": [{ "name": "TekRantGaming", "link": "https://github.com/TekRantGaming" }],
+  "notes": "Xbox Live Arcade release. Bring your own XBLA package. The serial field holds the Xbox 360 title ID; the SHA-1 is of default.xex."
+}
