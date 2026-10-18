@@ -53,7 +53,23 @@ namespace {
 
 // Settings the presenter/window read before the launcher runs; changing them
 // needs a relaunch to take effect.
-const std::vector<std::string> kRestartCvars = {"present_effect", "window_width", "window_height", "monitor"};
+// The Vulkan presenter (Linux) picks its present mode when the swapchain is
+// created, before the launcher shows, so VSync changes there need a relaunch.
+const std::vector<std::string> kRestartCvars = {"present_effect", "window_width", "window_height", "monitor",
+                                                "vulkan_allow_present_mode_immediate",
+                                                "vulkan_allow_present_mode_mailbox",
+                                                "vulkan_allow_present_mode_fifo_relaxed"};
+
+// VSync (issue #5). Windows (D3D12): the runtime's flag is "allow tearing",
+// which is VSync off. Linux (Vulkan): the presenter uses the first allowed of
+// immediate (tearing), mailbox, FIFO relaxed and FIFO, so VSync on disallows
+// the first three, leaving FIFO, which waits for the display.
+#if defined(_WIN32)
+constexpr const char* kVsyncOffCvars[] = {"d3d12_allow_variable_refresh_rate_and_tearing"};
+#else
+constexpr const char* kVsyncOffCvars[] = {"vulkan_allow_present_mode_immediate", "vulkan_allow_present_mode_mailbox",
+                                          "vulkan_allow_present_mode_fifo_relaxed"};
+#endif
 
 // Lime accent over the stock Midnight blues.
 const ImVec4 kAccent = ImVec4(0.60f, 0.86f, 0.18f, 1.0f);
@@ -346,14 +362,13 @@ class LauncherDialog final : public rex::ui::ImGuiDialog {
     WindowSizeCombo();
     ui.Row("Monitor", "Which display the game opens on. Applies when the game starts.");
     MonitorCombo();
-    // The runtime's flag is "allow tearing", which is VSync off.
     ui.Row("VSync",
            "On waits for the display for tear-free frames. Off has the lowest latency and lets G-Sync/FreeSync "
            "displays run freely.");
     {
-      const bool tearing = settings_.GetBool("d3d12_allow_variable_refresh_rate_and_tearing", true);
-      if (int i = ui.Segmented("vsync", {"Off", "On"}, tearing ? 0 : 1); i >= 0)
-        settings_.SetBool("d3d12_allow_variable_refresh_rate_and_tearing", i == 0);
+      const bool vsync_off = settings_.GetBool(kVsyncOffCvars[0], true);
+      if (int i = ui.Segmented("vsync", {"Off", "On"}, vsync_off ? 0 : 1); i >= 0)
+        for (const char* name : kVsyncOffCvars) settings_.SetBool(name, i == 0);
     }
     ui.Row("Aspect ratio", "The game is 16:9. Letterbox keeps its shape on other screens; stretch fills them.");
     {
