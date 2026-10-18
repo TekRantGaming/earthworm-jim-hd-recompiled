@@ -13,3 +13,7 @@ Open the launcher: it offers the update and installs it for you (or **About > Ch
 - **Linux / Steam Deck:** download **EarthwormJimHD-v0.9.6-linux-x86_64.AppImage**, make it executable and run it; the README has the Steam Deck steps.
 
 **No game files are included.**
+
+### SHA-256 and VirusTotal
+- `EarthwormJimHD-v0.9.6-windows-x64.zip`: `2c940956830f735b9c9ff31e2e590eb955ad4776ba20606ba1aa3beec8383bc7` ([VirusTotal](https://www.virustotal.com/gui/file/2c940956830f735b9c9ff31e2e590eb955ad4776ba20606ba1aa3beec8383bc7))
+- `EarthwormJimHD-v0.9.6-linux-x86_64.AppImage`: `19d04f23268b9716d8e80808b6434aa98deb2cbe6eba19879bc0255d2e372c00` ([VirusTotal](https://www.virustotal.com/gui/file/19d04f23268b9716d8e80808b6434aa98deb2cbe6eba19879bc0255d2e372c00))
